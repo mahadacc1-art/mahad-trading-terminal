@@ -166,7 +166,7 @@ async function loadMarketCandles(){
   const url='https://biquote.io/api/'+encodeURIComponent(symbol)+'/ohlc?interval='+encodeURIComponent(interval)+'&limit=300';
   const response=await fetch(url,{headers:{Accept:'application/json'}});if(!response.ok)throw new Error('Market-data provider HTTP '+response.status);
   const data=await response.json();if(!Array.isArray(data.bars))throw new Error(data.message||'Provider returned no OHLC bars for this symbol/timeframe.');
-  const candles=data.bars.map(v=>({time:Math.floor(Date.parse(v.openTime)/1000),open:Number(v.open),high:Number(v.high),low:Number(v.low),close:Number(v.close)})).filter(v=>Number.isFinite(v.time)&&[v.open,v.high,v.low,v.close].every(Number.isFinite)).sort((a,b)=>a.time-b.time);
+  const candles=data.bars.map(v=>({time:Math.floor(Date.parse(v.openTime)/1000),open:Number(v.open),high:Number(v.high),low:Number(v.low),close:Number(v.close),isOpen:Boolean(v.isOpen)})).filter(v=>Number.isFinite(v.time)&&[v.open,v.high,v.low,v.close].every(Number.isFinite)).sort((a,b)=>a.time-b.time);
   if(!candles.length)throw new Error('No valid OHLC candles were returned for '+symbol+'.');
   marketCandles=candles;marketSeries.setData(candles);if(marketLastPair!==pair||!marketChart.timeScale().getVisibleLogicalRange())marketChart.timeScale().fitContent();marketLastPair=pair;renderStrategyAI();
   const last=candles[candles.length-1];$('marketPrice').textContent=last.close.toFixed(pair.includes('JPY')?3:pair.includes('XAU')?2:5);$('marketCandleTime').textContent=new Date(last.time*1000).toISOString().replace('T',' ').slice(0,16);
