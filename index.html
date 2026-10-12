@@ -59,22 +59,22 @@
    <div class="field"><label for="marketInterval">Timeframe</label><select id="marketInterval"><option value="1m">M1 · 1 minute</option><option value="5m">M5 · 5 minutes</option><option value="15m">M15 · 15 minutes</option><option value="30m">M30 · 30 minutes</option><option value="1h">H1 · 1 hour</option><option value="4h">H4 · 4 hours</option><option value="1d">D1 · 1 day</option></select></div>
    <button class="btn primary" id="refreshMarket">↻ Refresh candles</button>
   </div>
-  <div class="marketstats" style="margin-top:15px"><div class="marketstat"><small>Latest close</small><strong id="marketPrice">—</strong></div><div class="marketstat"><small>Latest candle (UTC)</small><strong id="marketCandleTime">—</strong></div><div class="marketstat"><small>Data source</small><strong style="font-size:13px">Twelve Data · OHLC</strong></div></div>
+  <div class="marketstats" style="margin-top:15px"><div class="marketstat"><small>Latest close</small><strong id="marketPrice">—</strong></div><div class="marketstat"><small>Latest candle (UTC)</small><strong id="marketCandleTime">—</strong></div><div class="marketstat"><small>Data source</small><strong style="font-size:13px">biquote · OHLC</strong></div></div>
  </div>
  <div class="card"><div class="cardtitle"><div><h3 id="marketChartTitle">EUR/USD · M1</h3><p id="marketChartSubtitle">Connect your API key in Settings to load real market data.</p></div><span class="tag">MARKET DATA</span></div><div id="liveChart"></div><div class="notice">Candles are supplied by your selected data provider and may be delayed or rate-limited by your plan. This chart is for analysis only; it does not place trades. <a href="https://www.tradingview.com/" target="_blank" rel="noopener" style="color:#9dbaff">Charting library by TradingView</a>.</div></div>
 </section>
 
 <section class="section" id="strategyai">
- <div class="sectionhead"><div><h2>Strategy AI · Signal Lab</h2><p>Transparent rules-based prototype running on closed OHLC candles. Not trained on your personal notes yet.</p></div><span class="tag">PAPER SIGNALS ONLY</span></div>
+ <div class="sectionhead"><div><h2>Strategy AI · Signal Lab</h2><p>Your personal M1 rules: repeated reaction levels, body-confirmed breakout, retest, momentum and EMA 21. Closed candles only.</p></div><span class="tag">PAPER SIGNALS ONLY</span></div>
  <div class="cards">
-  <div class="card"><div class="metriclabel">Current setup</div><div class="metric" id="aiDirection">NO TRADE</div><div class="sub" id="aiConfidence">Waiting for sufficient closed candles</div></div>
-  <div class="card"><div class="metriclabel">EMA trend</div><div class="metric" id="aiTrend">—</div><div class="sub">EMA 9 versus EMA 21</div></div>
-  <div class="card"><div class="metriclabel">RSI (14)</div><div class="metric" id="aiRsi">—</div><div class="sub">Momentum filter</div></div>
-  <div class="card"><div class="metriclabel">Closed candles</div><div class="metric" id="aiCandleCount">0</div><div class="sub">Current unfinished candle excluded</div></div>
+  <div class="card"><div class="metriclabel">Current setup</div><div class="metric gold" id="aiDirection">NO TRADE</div><div class="sub" id="aiConfidence">Load M1 market candles to scan</div></div>
+  <div class="card"><div class="metriclabel">EMA 21 filter</div><div class="metric" id="aiTrend">—</div><div class="sub" id="aiTrendNote">BUY above · SELL below</div></div>
+  <div class="card"><div class="metriclabel">Setup type</div><div class="metric" id="aiSetupType">—</div><div class="sub">Breakout · Retest · Failed breakout</div></div>
+  <div class="card"><div class="metriclabel">Closed M1 candles</div><div class="metric" id="aiCandleCount">0</div><div class="sub">Open candle excluded from setup calculations</div></div>
  </div>
  <div class="twocol">
-  <div class="card"><div class="cardtitle"><div><h3>Signal explanation</h3><p>Why the rule engine did or did not find a setup</p></div><span class="tag" id="aiSignalTag">NO TRADE</span></div><div id="aiReason" class="minirows"><div class="minirow"><span>Open Live Forex Charts and load market data first.</span></div></div><div class="marketstats" style="margin-top:14px"><div class="marketstat"><small>Reference entry</small><strong id="aiEntry">—</strong></div><div class="marketstat"><small>Reference stop</small><strong id="aiStop">—</strong></div><div class="marketstat"><small>Reference target</small><strong id="aiTarget">—</strong></div></div><p class="notice">Illustrative paper-signal levels only. Spread, slippage, broker pricing and execution are not modelled; do not place live trades from this prototype.</p></div>
-  <div class="card"><div class="cardtitle"><div><h3>Starter rule set</h3><p>Displayed logic is intentionally simple and auditable</p></div></div><div class="minirows"><div class="minirow"><span>Data gate</span><strong>At least 30 closed candles</strong></div><div class="minirow"><span>BUY bias</span><strong>EMA 9 &gt; EMA 21 + RSI 52–68</strong></div><div class="minirow"><span>SELL bias</span><strong>EMA 9 &lt; EMA 21 + RSI 32–48</strong></div><div class="minirow"><span>Confirmation</span><strong>Last closed candle agrees with trend</strong></div><div class="minirow"><span>Risk reference</span><strong>1.5 × ATR(14) stop, 2R target</strong></div><div class="minirow"><span>Anything unclear</span><strong class="gold">NO TRADE</strong></div></div><p class="notice">This is a starter baseline, not your personal strategy or a trained machine-learning model. We will replace these conditions when your actual strategy rules/notes are available, then backtest before trusting any signals.</p></div>
+  <div class="card"><div class="cardtitle"><div><h3>Signal explanation</h3><p>Only confirmed rules are used; otherwise the engine returns NO TRADE.</p></div><span class="tag" id="aiSignalTag">NO TRADE</span></div><div id="aiReason" class="minirows"><div class="minirow"><span>Open Live Forex Charts and load M1 market data first.</span></div></div><div class="marketstats" style="margin-top:14px"><div class="marketstat"><small>Reference entry</small><strong id="aiEntry">—</strong></div><div class="marketstat"><small>Relevant S/R level</small><strong id="aiStop">—</strong></div><div class="marketstat"><small>Signal timing</small><strong id="aiTarget">Next M1 open</strong></div></div><p class="notice">Paper signals only. No orders are placed. The strategy has no user-defined stop-loss or take-profit rule yet, so this panel does not invent one. Feed delays, spread and slippage are not modelled.</p></div>
+  <div class="card"><div class="cardtitle"><div><h3>Your locked rule set</h3><p>Applied to M1 closed-candle data</p></div></div><div class="minirows"><div class="minirow"><span>Trend filter</span><strong>BUY above EMA 21 · SELL below EMA 21</strong></div><div class="minirow"><span>Support / resistance</span><strong>Repeated prior price reversals (2+ reactions)</strong></div><div class="minirow"><span>Breakout</span><strong>Closed candle body closes beyond the level</strong></div><div class="minirow"><span>Strong candle</span><strong>Body ≥70% of range; each wick ≤20%</strong></div><div class="minirow"><span>Momentum</span><strong>At least 2 consecutive strong candles in signal direction</strong></div><div class="minirow"><span>Retest</span><strong>Returns to broken level and closes on expected side</strong></div><div class="minirow"><span>Signal timing</span><strong>Very next candle open after setup candle closes</strong></div><div class="minirow"><span>Unclear / incomplete</span><strong class="gold">NO TRADE</strong></div></div><p class="notice">The reaction-zone tolerance and 20-candle retest lookback are implementation defaults for initial testing. Review them against your chart examples before trusting results.</p></div>
  </div>
 </section>
 
@@ -129,7 +129,7 @@ try{trades=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(trades)
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function persist(){localStorage.setItem(KEY,JSON.stringify(trades))}
-function showPage(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const names={overview:'Trading Overview',livecharts:'Live Forex Charts',strategyai:'Strategy AI · Signal Lab',journal:'Trade Journal',addtrade:'Record a Trade',plan:'60-Day Trading Plan',analytics:'Trading Analytics',settings:'Settings & Backup'};$('pageTitle').textContent=names[id]||'Trading Terminal';if(id==='addtrade'&&!$('tradeDate').value)$('tradeDate').value=new Date().toISOString().slice(0,10);if(id==='livecharts'){initMarketChart();loadMarketCandles()}if(id==='strategyai'){renderStrategyAI()}window.scrollTo({top:0,behavior:'smooth'})}
+function showPage(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const names={overview:'Trading Overview',livecharts:'Live Forex Charts',strategyai:'Strategy AI · Signal Lab',journal:'Trade Journal',addtrade:'Record a Trade',plan:'60-Day Trading Plan',analytics:'Trading Analytics',settings:'Settings & Backup'};$('pageTitle').textContent=names[id]||'Trading Terminal';if(id==='addtrade'&&!$('tradeDate').value)$('tradeDate').value=new Date().toISOString().slice(0,10);if(id==='livecharts'){initMarketChart();loadMarketCandles()}if(id==='strategyai'){if($('marketInterval').value!=='1m')$('marketInterval').value='1m';if(marketCandles.length)renderStrategyAI();else loadMarketCandles()}window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 function sums(){const net=trades.reduce((s,t)=>s+Number(t.pl||0),0),wins=trades.filter(t=>t.result==='WIN').length,losses=trades.filter(t=>t.result==='LOSS').length,grossWin=trades.reduce((s,t)=>s+Math.max(0,Number(t.pl)||0),0),grossLoss=trades.reduce((s,t)=>s+Math.max(0,-(Number(t.pl)||0)),0);return{net,wins,losses,grossWin,grossLoss,winrate:trades.length?wins/trades.length*100:0}}
 function chart(id){const svg=$(id),w=640,h=210,p=18,vals=[0,...trades.slice().reverse().reduce((a,t)=>{a.push((a[a.length-1]||0)+Number(t.pl||0));return a},[])];svg.innerHTML='';if(trades.length===0){svg.innerHTML='<text x="320" y="104" fill="#7486a0" font-size="13" text-anchor="middle">Your equity curve will appear after you add trades</text>';return}const min=Math.min(...vals,0),max=Math.max(...vals,0),range=max-min||1;const x=i=>p+i*(w-2*p)/(vals.length-1||1),y=v=>h-p-(v-min)*(h-2*p)/range;let ns='http://www.w3.org/2000/svg';for(let i=0;i<4;i++){let yy=p+i*(h-2*p)/3,l=document.createElementNS(ns,'line');l.setAttribute('x1',p);l.setAttribute('x2',w-p);l.setAttribute('y1',yy);l.setAttribute('y2',yy);l.setAttribute('stroke','#263449');l.setAttribute('stroke-dasharray','4 5');svg.appendChild(l)}let d=vals.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ');let path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',vals[vals.length-1]>=0?'#39d6a0':'#ff7185');path.setAttribute('stroke-width','3');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');svg.appendChild(path);let c=document.createElementNS(ns,'circle');c.setAttribute('cx',x(vals.length-1));c.setAttribute('cy',y(vals[vals.length-1]));c.setAttribute('r','5');c.setAttribute('fill',vals[vals.length-1]>=0?'#39d6a0':'#ff7185');svg.appendChild(c)}
@@ -158,7 +158,7 @@ function initMarketChart(){
  marketResizeObserver=new ResizeObserver(entries=>{if(marketChart&&entries[0])marketChart.applyOptions({width:Math.max(300,entries[0].contentRect.width)})});marketResizeObserver.observe($('liveChart'));
 }
 async function loadMarketCandles(){
- if(!$('livecharts').classList.contains('active'))return;
+ if(!$('livecharts').classList.contains('active')&&!$('strategyai').classList.contains('active'))return;
  initMarketChart();if(!marketChart||marketLoading)return;
  marketLoading=true;const pair=$('marketPair').value,interval=$('marketInterval').value,symbol=pair.replace('/','');
  $('marketChartTitle').textContent=pair+' · '+(marketIntervalLabel[interval]||interval);setMarketStatus('Loading market data…');$('refreshMarket').disabled=true;
@@ -178,22 +178,107 @@ async function loadMarketCandles(){
 function ema(values,period){if(values.length<period)return null;const k=2/(period+1);let v=values.slice(0,period).reduce((a,b)=>a+b,0)/period;for(let i=period;i<values.length;i++)v=values[i]*k+v*(1-k);return v}
 function rsi(values,period=14){if(values.length<=period)return null;let gain=0,loss=0;for(let i=1;i<=period;i++){const d=values[i]-values[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}gain/=period;loss/=period;for(let i=period+1;i<values.length;i++){const d=values[i]-values[i-1];gain=(gain*(period-1)+Math.max(d,0))/period;loss=(loss*(period-1)+Math.max(-d,0))/period}if(loss===0)return 100;return 100-100/(1+gain/loss)}
 function atr(bars,period=14){if(bars.length<=period)return null;const tr=[];for(let i=1;i<bars.length;i++){const b=bars[i],prev=bars[i-1];tr.push(Math.max(b.high-b.low,Math.abs(b.high-prev.close),Math.abs(b.low-prev.close)))}return tr.slice(-period).reduce((a,b)=>a+b,0)/period}
+function candleStrength(b){
+ const range=b.high-b.low;if(!Number.isFinite(range)||range<=0)return{strong:false,bodyPct:0,upperPct:100,lowerPct:100,dir:0};
+ const body=Math.abs(b.close-b.open),upper=b.high-Math.max(b.open,b.close),lower=Math.min(b.open,b.close)-b.low;
+ const bodyPct=body/range*100,upperPct=upper/range*100,lowerPct=lower/range*100,dir=b.close>b.open?1:b.close<b.open?-1:0;
+ return{strong:bodyPct>=70&&upperPct<=20&&lowerPct<=20,bodyPct,upperPct,lowerPct,dir};
+}
+function average(values){return values.length?values.reduce((a,b)=>a+b,0)/values.length:null}
+function findReactionLevels(bars,kind){
+ if(bars.length<12)return[];
+ const vol=atr(bars,14)||bars[bars.length-1].close*0.0002;
+ const tolerance=Math.max(vol*0.22,bars[bars.length-1].close*0.00008);
+ const points=[],wing=2,start=Math.max(wing,bars.length-120);
+ for(let i=start;i<bars.length-wing;i++){
+  const b=bars[i];let pivot=true;
+  for(let k=1;k<=wing;k++){
+   if(kind==='resistance'&&(b.high<bars[i-k].high||b.high<bars[i+k].high)){pivot=false;break}
+   if(kind==='support'&&(b.low>bars[i-k].low||b.low>bars[i+k].low)){pivot=false;break}
+  }
+  if(pivot)points.push({price:kind==='resistance'?b.high:b.low,index:i});
+ }
+ const groups=[];
+ for(const p of points){
+  let g=groups.find(x=>Math.abs(x.price-p.price)<=tolerance);
+  if(!g){g={price:p.price,points:[]};groups.push(g)}
+  g.points.push(p);g.price=average(g.points.map(x=>x.price));
+ }
+ return groups.filter(g=>g.points.length>=2).map(g=>({price:g.price,touches:g.points.length,lastTouch:Math.max(...g.points.map(p=>p.index)),tolerance})).sort((a,b)=>b.touches-a.touches);
+}
+function momentumOk(bars,side){
+ if(bars.length<2)return false;
+ const a=candleStrength(bars[bars.length-2]),b=candleStrength(bars[bars.length-1]),dir=side==='BUY'?1:-1;
+ return a.strong&&b.strong&&a.dir===dir&&b.dir===dir;
+}
 function renderStrategyAI(){
  const direction=$('aiDirection');if(!direction)return;
- const closed=marketCandles.filter((b,i)=>!b.isOpen);const closes=closed.map(b=>b.close);
+ const closed=marketCandles.filter(b=>!b.isOpen).sort((a,b)=>a.time-b.time),openBar=marketCandles.find(b=>b.isOpen);
  $('aiCandleCount').textContent=closed.length;
- const noTrade=(why)=>{direction.textContent='NO TRADE';direction.className='metric gold';$('aiConfidence').textContent='No actionable setup';$('aiSignalTag').textContent='NO TRADE';$('aiTrend').textContent='—';$('aiRsi').textContent='—';$('aiEntry').textContent='—';$('aiStop').textContent='—';$('aiTarget').textContent='—';$('aiReason').innerHTML='<div class="minirow"><span>'+esc(why)+'</span></div>';};
- if(closed.length<30){noTrade('Need at least 30 closed candles. Open Live Forex Charts and wait for data to load.');return}
- const fast=ema(closes,9),slow=ema(closes,21),mom=rsi(closes,14),vol=atr(closed,14),last=closed[closed.length-1],prev=closed[closed.length-2];
- $('aiTrend').textContent=fast>slow?'Bullish':fast<slow?'Bearish':'Flat';$('aiTrend').className='metric '+(fast>slow?'positive':fast<slow?'negative':'');
- $('aiRsi').textContent=mom.toFixed(1);
- const bullish=fast>slow&&mom>=52&&mom<=68&&last.close>last.open&&last.close>prev.close;
- const bearish=fast<slow&&mom>=32&&mom<=48&&last.close<last.open&&last.close<prev.close;
- if(!Number.isFinite(vol)||vol<=0){noTrade('ATR could not be calculated safely from this data.');return}
- if(!bullish&&!bearish){noTrade('Trend, RSI band and closed-candle confirmation do not all agree. Wait for a clearer setup.');$('aiTrend').textContent=fast>slow?'Bullish':fast<slow?'Bearish':'Flat';$('aiRsi').textContent=mom.toFixed(1);$('aiCandleCount').textContent=closed.length;return}
- const side=bullish?'BUY':'SELL',entry=last.close,stop=bullish?entry-1.5*vol:entry+1.5*vol,target=bullish?entry+3*vol:entry-3*vol,digits=$('marketPair').value.includes('JPY')?3:$('marketPair').value.includes('XAU')?2:5;
- direction.textContent=side;direction.className='metric '+(bullish?'positive':'negative');$('aiConfidence').textContent='Rule match · paper signal only';$('aiSignalTag').textContent=side;$('aiEntry').textContent=entry.toFixed(digits);$('aiStop').textContent=stop.toFixed(digits);$('aiTarget').textContent=target.toFixed(digits);
- $('aiReason').innerHTML='<div class="minirow"><span>EMA 9 / EMA 21 trend</span><strong>'+(bullish?'Bullish':'Bearish')+'</strong></div><div class="minirow"><span>RSI(14) momentum filter</span><strong>'+mom.toFixed(1)+'</strong></div><div class="minirow"><span>Last closed candle confirmation</span><strong>'+(bullish?'Bullish close':'Bearish close')+'</strong></div><div class="minirow"><span>Risk model</span><strong>ATR stop · 2R target</strong></div><div class="minirow"><span>Signal candle (UTC)</span><strong>'+new Date(last.time*1000).toISOString().replace('T',' ').slice(0,16)+'</strong></div>';
+ const noTrade=(why,details=[])=>{
+  direction.textContent='NO TRADE';direction.className='metric gold';$('aiConfidence').textContent='No confirmed signal';$('aiSignalTag').textContent='NO TRADE';$('aiSetupType').textContent='—';$('aiEntry').textContent='—';$('aiStop').textContent='—';$('aiTarget').textContent=openBar?'Waiting / no setup':'Waiting for next M1 candle';
+  $('aiReason').innerHTML=[why,...details].map(s=>'<div class="minirow"><span>'+esc(s)+'</span></div>').join('');
+ };
+ if($('marketInterval').value!=='1m'){noTrade('Strategy is locked to M1. Choose M1 on Live Forex Charts.');return}
+ if(closed.length<50){noTrade('Need at least 50 closed M1 candles to identify repeated reaction levels reliably.');$('aiTrend').textContent='—';$('aiTrendNote').textContent='BUY above · SELL below';return}
+ const last=closed[closed.length-1],prev=closed[closed.length-2],closes=closed.map(b=>b.close),ema21=ema(closes,21);
+ const trend=last.close>ema21?'Above EMA 21':last.close<ema21?'Below EMA 21':'At EMA 21';
+ $('aiTrend').textContent=trend;$('aiTrend').className='metric '+(last.close>ema21?'positive':last.close<ema21?'negative':'');$('aiTrendNote').textContent='EMA 21: '+ema21.toFixed($('marketPair').value.includes('JPY')?3:$('marketPair').value.includes('XAU')?2:5);
+ const resistance=findReactionLevels(closed.slice(0,-1),'resistance'),support=findReactionLevels(closed.slice(0,-1),'support');
+ const relevantR=resistance.filter(x=>x.price>=Math.min(prev.close,last.close)-x.tolerance).sort((a,b)=>Math.abs(a.price-last.close)-Math.abs(b.price-last.close))[0];
+ const relevantS=support.filter(x=>x.price<=Math.max(prev.close,last.close)+x.tolerance).sort((a,b)=>Math.abs(a.price-last.close)-Math.abs(b.price-last.close))[0];
+ const digits=$('marketPair').value.includes('JPY')?3:$('marketPair').value.includes('XAU')?2:5,fmt=n=>Number.isFinite(n)?n.toFixed(digits):'—';
+ const body=candleStrength(last),prevBody=candleStrength(prev),recent=closed.slice(-21,-1),tolFor=level=>level?.tolerance||Math.max((atr(closed,14)||last.close*0.0002)*0.22,last.close*0.00008);
+ const eventFor=(level,side)=>{
+  if(!level)return null;const tol=tolFor(level),from=Math.max(1,closed.length-21),to=closed.length-2;
+  for(let i=to;i>=from;i--){
+   const before=closed[i-1],b=closed[i];
+   if(side==='BUY'&&before.close<=level.price&&b.close>level.price)return{i,level,tol};
+   if(side==='SELL'&&before.close>=level.price&&b.close<level.price)return{i,level,tol};
+  }return null;
+ };
+ let signal=null,levelUsed=null,setupType='—',why=[];
+ // 1) Fresh body-confirmed breakout: latest closed candle crosses a repeated reaction level.
+ if(last.close>ema21&&relevantR&&prev.close<=relevantR.price&&last.close>relevantR.price&&body.dir===1&&body.strong&&momentumOk(closed.slice(-2), 'BUY')){
+  signal='BUY';levelUsed=relevantR;setupType='BREAKOUT';why=['Resistance '+fmt(relevantR.price)+' broken by a closed candle body.','Repeated reaction level: '+relevantR.touches+' prior pivot reactions.','EMA 21 filter passed: price is above EMA 21.','Two consecutive bullish strong candles passed the momentum filter.'];
+ }else if(last.close<ema21&&relevantS&&prev.close>=relevantS.price&&last.close<relevantS.price&&body.dir===-1&&body.strong&&momentumOk(closed.slice(-2),'SELL')){
+  signal='SELL';levelUsed=relevantS;setupType='BREAKDOWN';why=['Support '+fmt(relevantS.price)+' broken by a closed candle body.','Repeated reaction level: '+relevantS.touches+' prior pivot reactions.','EMA 21 filter passed: price is below EMA 21.','Two consecutive bearish strong candles passed the momentum filter.'];
+ }
+ // 2) Retest continuation: a prior break occurred recently; latest candle returns to the level and closes on the breakout side.
+ if(!signal&&relevantR&&last.close>ema21){
+  const ev=eventFor(relevantR,'BUY'),tol=tolFor(relevantR);
+  if(ev&&ev.i<closed.length-1&&last.low<=relevantR.price+tol&&last.low>=relevantR.price-tol*1.5&&last.close>relevantR.price&&body.dir===1&&body.strong&&prevBody.dir===1){
+   signal='BUY';levelUsed=relevantR;setupType='RETEST';why=['Price retested broken resistance '+fmt(relevantR.price)+' and the candle closed back above it.','EMA 21 filter passed.','Retest candle is strong and confirms the bullish side of the level.'];
+  }
+ }
+ if(!signal&&relevantS&&last.close<ema21){
+  const ev=eventFor(relevantS,'SELL'),tol=tolFor(relevantS);
+  if(ev&&ev.i<closed.length-1&&last.high>=relevantS.price-tol&&last.high<=relevantS.price+tol*1.5&&last.close<relevantS.price&&body.dir===-1&&body.strong&&prevBody.dir===-1){
+   signal='SELL';levelUsed=relevantS;setupType='RETEST';why=['Price retested broken support '+fmt(relevantS.price)+' and the candle closed back below it.','EMA 21 filter passed.','Retest candle is strong and confirms the bearish side of the level.'];
+  }
+ }
+ // 3) Failed breakout: price closes back through a recently broken level; opposite direction still needs EMA and momentum confirmation.
+ if(!signal&&relevantR&&last.close<relevantR.price&&prev.close>=relevantR.price&&last.close<ema21&&body.dir===-1&&body.strong&&momentumOk(closed.slice(-2),'SELL')){
+  const ev=eventFor(relevantR,'BUY');
+  if(ev&&ev.i<closed.length-1){signal='SELL';levelUsed=relevantR;setupType='FAILED BREAKOUT';why=['Price returned below previously broken resistance '+fmt(relevantR.price)+'.','Failed bullish breakout: opposite SELL conditions are now confirmed.','EMA 21 and two-candle bearish momentum filters passed.'];}
+ }
+ if(!signal&&relevantS&&last.close>relevantS.price&&prev.close<=relevantS.price&&last.close>ema21&&body.dir===1&&body.strong&&momentumOk(closed.slice(-2),'BUY')){
+  const ev=eventFor(relevantS,'SELL');
+  if(ev&&ev.i<closed.length-1){signal='BUY';levelUsed=relevantS;setupType='FAILED BREAKDOWN';why=['Price returned above previously broken support '+fmt(relevantS.price)+'.','Failed bearish breakdown: opposite BUY conditions are now confirmed.','EMA 21 and two-candle bullish momentum filters passed.'];}
+ }
+ $('aiEntry').textContent=openBar?fmt(openBar.open):'Pending next open';$('aiStop').textContent=levelUsed?fmt(levelUsed.price):'—';
+ if(!signal){
+  const details=['Detected repeated resistance levels: '+resistance.length+'.','Detected repeated support levels: '+support.length+'.','Latest candle body: '+body.bodyPct.toFixed(1)+'%; upper wick '+body.upperPct.toFixed(1)+'%; lower wick '+body.lowerPct.toFixed(1)+'%.','Need breakout/retest confirmation, EMA 21 direction and required candle strength/momentum to agree.'];
+  noTrade(openBar?'No complete setup on the last closed candle.':'No complete setup; waiting for the next M1 candle to open.',details);
+  $('aiTrend').textContent=trend;$('aiTrendNote').textContent='EMA 21: '+fmt(ema21);$('aiCandleCount').textContent=closed.length;return;
+ }
+ if(!openBar){
+  noTrade('SETUP CONFIRMED: '+signal+' · '+setupType+'. The feed has not supplied the next open M1 candle yet, so the signal is pending.',why);
+  direction.textContent='PENDING '+signal;direction.className='metric '+(signal==='BUY'?'positive':'negative');$('aiSignalTag').textContent='PENDING';$('aiSetupType').textContent=setupType;$('aiStop').textContent=levelUsed?fmt(levelUsed.price):'—';$('aiEntry').textContent='Pending next open';$('aiTarget').textContent='Next M1 open';return;
+ }
+ direction.textContent=signal;direction.className='metric '+(signal==='BUY'?'positive':'negative');$('aiConfidence').textContent='Confirmed on closed candle · signal at next M1 open';$('aiSignalTag').textContent=signal;$('aiSetupType').textContent=setupType;$('aiEntry').textContent=fmt(openBar.open);$('aiStop').textContent=levelUsed?fmt(levelUsed.price):'—';$('aiTarget').textContent='Next M1 open';
+ why.push('Signal candle: '+new Date(last.time*1000).toISOString().replace('T',' ').slice(0,16)+' UTC.');why.push('Next candle open: '+new Date(openBar.time*1000).toISOString().replace('T',' ').slice(0,16)+' UTC.');
+ $('aiReason').innerHTML=why.map(s=>'<div class="minirow"><span>'+esc(s)+'</span></div>').join('');
 }
 $('marketPair').addEventListener('change',loadMarketCandles);$('marketInterval').addEventListener('change',loadMarketCandles);$('refreshMarket').addEventListener('click',loadMarketCandles);
 if(marketTimer)clearInterval(marketTimer);marketTimer=setInterval(()=>{if($('livecharts').classList.contains('active'))loadMarketCandles()},30000);
