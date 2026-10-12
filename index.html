@@ -65,16 +65,16 @@
 </section>
 
 <section class="section" id="strategyai">
- <div class="sectionhead"><div><h2>Strategy AI · Signal Lab</h2><p>Your personal M1 rules: repeated reaction levels, body-confirmed breakout, retest, momentum and EMA 21. Closed candles only.</p></div><span class="tag">PAPER SIGNALS ONLY</span></div>
+ <div class="sectionhead"><div><h2>Strategy AI · Signal Lab</h2><p>Private strategy engine. Signal details are kept minimal on this dashboard.</p></div><span class="tag">PAPER SIGNALS ONLY</span></div>
  <div class="cards">
-  <div class="card"><div class="metriclabel">Current setup</div><div class="metric gold" id="aiDirection">NO TRADE</div><div class="sub" id="aiConfidence">Load M1 market candles to scan</div></div>
-  <div class="card"><div class="metriclabel">EMA 21 filter</div><div class="metric" id="aiTrend">—</div><div class="sub" id="aiTrendNote">BUY above · SELL below</div></div>
-  <div class="card"><div class="metriclabel">Setup type</div><div class="metric" id="aiSetupType">—</div><div class="sub">Breakout · Retest · Failed breakout</div></div>
-  <div class="card"><div class="metriclabel">Closed M1 candles</div><div class="metric" id="aiCandleCount">0</div><div class="sub">Open candle excluded from setup calculations</div></div>
+  <div class="card"><div class="metriclabel">Current setup</div><div class="metric gold" id="aiDirection">NO TRADE</div><div class="sub" id="aiConfidence">Load market data to scan</div></div>
+  <div class="card"><div class="metriclabel">Market filter</div><div class="metric" id="aiTrend">—</div><div class="sub" id="aiTrendNote">Private</div></div>
+  <div class="card"><div class="metriclabel">Setup status</div><div class="metric" id="aiSetupType">—</div><div class="sub">Details hidden</div></div>
+  <div class="card"><div class="metriclabel">Closed candles</div><div class="metric" id="aiCandleCount">0</div><div class="sub">Current unfinished candle excluded</div></div>
  </div>
  <div class="twocol">
-  <div class="card"><div class="cardtitle"><div><h3>Signal explanation</h3><p>Only confirmed rules are used; otherwise the engine returns NO TRADE.</p></div><span class="tag" id="aiSignalTag">NO TRADE</span></div><div id="aiReason" class="minirows"><div class="minirow"><span>Open Live Forex Charts and load M1 market data first.</span></div></div><div class="marketstats" style="margin-top:14px"><div class="marketstat"><small>Reference entry</small><strong id="aiEntry">—</strong></div><div class="marketstat"><small>Relevant S/R level</small><strong id="aiStop">—</strong></div><div class="marketstat"><small>Signal timing</small><strong id="aiTarget">Next M1 open</strong></div></div><p class="notice">Paper signals only. No orders are placed. The strategy has no user-defined stop-loss or take-profit rule yet, so this panel does not invent one. Feed delays, spread and slippage are not modelled.</p></div>
-  <div class="card"><div class="cardtitle"><div><h3>Your locked rule set</h3><p>Applied to M1 closed-candle data</p></div></div><div class="minirows"><div class="minirow"><span>Trend filter</span><strong>BUY above EMA 21 · SELL below EMA 21</strong></div><div class="minirow"><span>Support / resistance</span><strong>Repeated prior price reversals (2+ reactions)</strong></div><div class="minirow"><span>Breakout</span><strong>Closed candle body closes beyond the level</strong></div><div class="minirow"><span>Strong candle</span><strong>Body ≥70% of range; each wick ≤20%</strong></div><div class="minirow"><span>Momentum</span><strong>At least 2 consecutive strong candles in signal direction</strong></div><div class="minirow"><span>Retest</span><strong>Returns to broken level and closes on expected side</strong></div><div class="minirow"><span>Signal timing</span><strong>Very next candle open after setup candle closes</strong></div><div class="minirow"><span>Unclear / incomplete</span><strong class="gold">NO TRADE</strong></div></div><p class="notice">The reaction-zone tolerance and 20-candle retest lookback are implementation defaults for initial testing. Review them against your chart examples before trusting results.</p></div>
+  <div class="card"><div class="cardtitle"><div><h3>Signal status</h3><p>Private strategy conditions are not displayed here.</p></div><span class="tag" id="aiSignalTag">NO TRADE</span></div><div id="aiReason" class="minirows"><div class="minirow"><span>Open market charts and load data to scan.</span></div></div><div class="marketstats" style="margin-top:14px"><div class="marketstat"><small>Reference entry</small><strong id="aiEntry">—</strong></div><div class="marketstat"><small>Reference level</small><strong id="aiStop">—</strong></div><div class="marketstat"><small>Signal timing</small><strong id="aiTarget">Next candle open</strong></div></div><p class="notice">Paper signals only. No orders are placed. This dashboard intentionally hides private strategy details.</p></div>
+  <div class="card"><div class="cardtitle"><div><h3>Private configuration</h3><p>Internal signal rules are not shown in the dashboard.</p></div><span class="tag">HIDDEN</span></div><div class="minirows"><div class="minirow"><span>Strategy configuration</span><strong>Private</strong></div><div class="minirow"><span>Signal filters</span><strong>Private</strong></div><div class="minirow"><span>Setup confirmation</span><strong>Private</strong></div><div class="minirow"><span>Signal timing</span><strong>Next candle</strong></div><div class="minirow"><span>Unclear / incomplete setup</span><strong class="gold">NO TRADE</strong></div></div><p class="notice">Note: hiding details in this page only hides the on-screen display. The current GitHub Pages site serves browser-side code publicly, so source-code rules are not secret from someone inspecting the website or repository.</p></div>
  </div>
 </section>
 
@@ -240,35 +240,35 @@ function renderStrategyAI(){
  let signal=null,levelUsed=null,setupType='—',why=[];
  // 1) Fresh body-confirmed breakout: latest closed candle crosses a repeated reaction level.
  if(last.close>ema21&&relevantR&&prev.close<=relevantR.price&&last.close>relevantR.price&&body.dir===1&&body.strong&&momentumOk(closed.slice(-2), 'BUY')){
-  signal='BUY';levelUsed=relevantR;setupType='BREAKOUT';why=['Resistance '+fmt(relevantR.price)+' broken by a closed candle body.','Repeated reaction level: '+relevantR.touches+' prior pivot reactions.','EMA 21 filter passed: price is above EMA 21.','Two consecutive bullish strong candles passed the momentum filter.'];
+  signal='BUY';levelUsed=relevantR;setupType='BREAKOUT';why=['Confirmed setup detected.','Private signal filters passed.','Signal is based on closed candle data.'];
  }else if(last.close<ema21&&relevantS&&prev.close>=relevantS.price&&last.close<relevantS.price&&body.dir===-1&&body.strong&&momentumOk(closed.slice(-2),'SELL')){
-  signal='SELL';levelUsed=relevantS;setupType='BREAKDOWN';why=['Support '+fmt(relevantS.price)+' broken by a closed candle body.','Repeated reaction level: '+relevantS.touches+' prior pivot reactions.','EMA 21 filter passed: price is below EMA 21.','Two consecutive bearish strong candles passed the momentum filter.'];
+  signal='SELL';levelUsed=relevantS;setupType='BREAKDOWN';why=['Confirmed setup detected.','Private signal filters passed.','Signal is based on closed candle data.'];
  }
  // 2) Retest continuation: a prior break occurred recently; latest candle returns to the level and closes on the breakout side.
  if(!signal&&relevantR&&last.close>ema21){
   const ev=eventFor(relevantR,'BUY'),tol=tolFor(relevantR);
   if(ev&&ev.i<closed.length-1&&last.low<=relevantR.price+tol&&last.low>=relevantR.price-tol*1.5&&last.close>relevantR.price&&body.dir===1&&body.strong&&prevBody.dir===1){
-   signal='BUY';levelUsed=relevantR;setupType='RETEST';why=['Price retested broken resistance '+fmt(relevantR.price)+' and the candle closed back above it.','EMA 21 filter passed.','Retest candle is strong and confirms the bullish side of the level.'];
+   signal='BUY';levelUsed=relevantR;setupType='RETEST';why=['Confirmed setup detected.','Private signal filters passed.','Signal is based on closed candle data.'];
   }
  }
  if(!signal&&relevantS&&last.close<ema21){
   const ev=eventFor(relevantS,'SELL'),tol=tolFor(relevantS);
   if(ev&&ev.i<closed.length-1&&last.high>=relevantS.price-tol&&last.high<=relevantS.price+tol*1.5&&last.close<relevantS.price&&body.dir===-1&&body.strong&&prevBody.dir===-1){
-   signal='SELL';levelUsed=relevantS;setupType='RETEST';why=['Price retested broken support '+fmt(relevantS.price)+' and the candle closed back below it.','EMA 21 filter passed.','Retest candle is strong and confirms the bearish side of the level.'];
+   signal='SELL';levelUsed=relevantS;setupType='RETEST';why=['Confirmed setup detected.','Private signal filters passed.','Signal is based on closed candle data.'];
   }
  }
  // 3) Failed breakout: price closes back through a recently broken level; opposite direction still needs EMA and momentum confirmation.
  if(!signal&&relevantR&&last.close<relevantR.price&&prev.close>=relevantR.price&&last.close<ema21&&body.dir===-1&&body.strong&&momentumOk(closed.slice(-2),'SELL')){
   const ev=eventFor(relevantR,'BUY');
-  if(ev&&ev.i<closed.length-1){signal='SELL';levelUsed=relevantR;setupType='FAILED BREAKOUT';why=['Price returned below previously broken resistance '+fmt(relevantR.price)+'.','Failed bullish breakout: opposite SELL conditions are now confirmed.','EMA 21 and two-candle bearish momentum filters passed.'];}
+  if(ev&&ev.i<closed.length-1){signal='SELL';levelUsed=relevantR;setupType='FAILED BREAKOUT';why=['Confirmed setup detected.','Private reversal filters passed.','Signal is based on closed candle data.'];}
  }
  if(!signal&&relevantS&&last.close>relevantS.price&&prev.close<=relevantS.price&&last.close>ema21&&body.dir===1&&body.strong&&momentumOk(closed.slice(-2),'BUY')){
   const ev=eventFor(relevantS,'SELL');
-  if(ev&&ev.i<closed.length-1){signal='BUY';levelUsed=relevantS;setupType='FAILED BREAKDOWN';why=['Price returned above previously broken support '+fmt(relevantS.price)+'.','Failed bearish breakdown: opposite BUY conditions are now confirmed.','EMA 21 and two-candle bullish momentum filters passed.'];}
+  if(ev&&ev.i<closed.length-1){signal='BUY';levelUsed=relevantS;setupType='FAILED BREAKDOWN';why=['Confirmed setup detected.','Private reversal filters passed.','Signal is based on closed candle data.'];}
  }
  $('aiEntry').textContent=openBar?fmt(openBar.open):'Pending next open';$('aiStop').textContent=levelUsed?fmt(levelUsed.price):'—';
  if(!signal){
-  const details=['Detected repeated resistance levels: '+resistance.length+'.','Detected repeated support levels: '+support.length+'.','Latest candle body: '+body.bodyPct.toFixed(1)+'%; upper wick '+body.upperPct.toFixed(1)+'%; lower wick '+body.lowerPct.toFixed(1)+'%.','Need breakout/retest confirmation, EMA 21 direction and required candle strength/momentum to agree.'];
+  const details=['No complete setup detected on the latest closed candle.','Private signal conditions have not aligned yet.','Waiting for the next eligible setup.'];
   noTrade(openBar?'No complete setup on the last closed candle.':'No complete setup; waiting for the next M1 candle to open.',details);
   $('aiTrend').textContent=trend;$('aiTrendNote').textContent='EMA 21: '+fmt(ema21);$('aiCandleCount').textContent=closed.length;return;
  }
