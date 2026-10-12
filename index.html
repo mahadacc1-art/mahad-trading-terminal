@@ -21,6 +21,7 @@
  <nav class="nav">
   <button class="active" data-page="overview"><span class="ico">▦</span><span class="navtext">Overview</span></button>
   <button data-page="livecharts"><span class="ico">⌁</span><span class="navtext">Live Forex Charts</span></button>
+  <button data-page="strategyai"><span class="ico">✧</span><span class="navtext">Strategy AI</span></button>
   <button data-page="journal"><span class="ico">▤</span><span class="navtext">Trade Journal</span></button>
   <button data-page="addtrade"><span class="ico">＋</span><span class="navtext">Add Trade</span></button>
   <button data-page="plan"><span class="ico">◷</span><span class="navtext">60-Day Plan</span></button>
@@ -61,6 +62,20 @@
   <div class="marketstats" style="margin-top:15px"><div class="marketstat"><small>Latest close</small><strong id="marketPrice">—</strong></div><div class="marketstat"><small>Latest candle (UTC)</small><strong id="marketCandleTime">—</strong></div><div class="marketstat"><small>Data source</small><strong style="font-size:13px">Twelve Data · OHLC</strong></div></div>
  </div>
  <div class="card"><div class="cardtitle"><div><h3 id="marketChartTitle">EUR/USD · M1</h3><p id="marketChartSubtitle">Connect your API key in Settings to load real market data.</p></div><span class="tag">MARKET DATA</span></div><div id="liveChart"></div><div class="notice">Candles are supplied by your selected data provider and may be delayed or rate-limited by your plan. This chart is for analysis only; it does not place trades. <a href="https://www.tradingview.com/" target="_blank" rel="noopener" style="color:#9dbaff">Charting library by TradingView</a>.</div></div>
+</section>
+
+<section class="section" id="strategyai">
+ <div class="sectionhead"><div><h2>Strategy AI · Signal Lab</h2><p>Transparent rules-based prototype running on closed OHLC candles. Not trained on your personal notes yet.</p></div><span class="tag">PAPER SIGNALS ONLY</span></div>
+ <div class="cards">
+  <div class="card"><div class="metriclabel">Current setup</div><div class="metric" id="aiDirection">NO TRADE</div><div class="sub" id="aiConfidence">Waiting for sufficient closed candles</div></div>
+  <div class="card"><div class="metriclabel">EMA trend</div><div class="metric" id="aiTrend">—</div><div class="sub">EMA 9 versus EMA 21</div></div>
+  <div class="card"><div class="metriclabel">RSI (14)</div><div class="metric" id="aiRsi">—</div><div class="sub">Momentum filter</div></div>
+  <div class="card"><div class="metriclabel">Closed candles</div><div class="metric" id="aiCandleCount">0</div><div class="sub">Current unfinished candle excluded</div></div>
+ </div>
+ <div class="twocol">
+  <div class="card"><div class="cardtitle"><div><h3>Signal explanation</h3><p>Why the rule engine did or did not find a setup</p></div><span class="tag" id="aiSignalTag">NO TRADE</span></div><div id="aiReason" class="minirows"><div class="minirow"><span>Open Live Forex Charts and load market data first.</span></div></div><div class="marketstats" style="margin-top:14px"><div class="marketstat"><small>Reference entry</small><strong id="aiEntry">—</strong></div><div class="marketstat"><small>Reference stop</small><strong id="aiStop">—</strong></div><div class="marketstat"><small>Reference target</small><strong id="aiTarget">—</strong></div></div><p class="notice">Illustrative paper-signal levels only. Spread, slippage, broker pricing and execution are not modelled; do not place live trades from this prototype.</p></div>
+  <div class="card"><div class="cardtitle"><div><h3>Starter rule set</h3><p>Displayed logic is intentionally simple and auditable</p></div></div><div class="minirows"><div class="minirow"><span>Data gate</span><strong>At least 30 closed candles</strong></div><div class="minirow"><span>BUY bias</span><strong>EMA 9 &gt; EMA 21 + RSI 52–68</strong></div><div class="minirow"><span>SELL bias</span><strong>EMA 9 &lt; EMA 21 + RSI 32–48</strong></div><div class="minirow"><span>Confirmation</span><strong>Last closed candle agrees with trend</strong></div><div class="minirow"><span>Risk reference</span><strong>1.5 × ATR(14) stop, 2R target</strong></div><div class="minirow"><span>Anything unclear</span><strong class="gold">NO TRADE</strong></div></div><p class="notice">This is a starter baseline, not your personal strategy or a trained machine-learning model. We will replace these conditions when your actual strategy rules/notes are available, then backtest before trusting any signals.</p></div>
+ </div>
 </section>
 
 <section class="section" id="journal">
@@ -114,7 +129,7 @@ try{trades=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(trades)
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function persist(){localStorage.setItem(KEY,JSON.stringify(trades))}
-function showPage(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const names={overview:'Trading Overview',livecharts:'Live Forex Charts',journal:'Trade Journal',addtrade:'Record a Trade',plan:'60-Day Trading Plan',analytics:'Trading Analytics',settings:'Settings & Backup'};$('pageTitle').textContent=names[id]||'Trading Terminal';if(id==='addtrade'&&!$('tradeDate').value)$('tradeDate').value=new Date().toISOString().slice(0,10);if(id==='livecharts'){initMarketChart();loadMarketCandles()}window.scrollTo({top:0,behavior:'smooth'})}
+function showPage(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));const names={overview:'Trading Overview',livecharts:'Live Forex Charts',strategyai:'Strategy AI · Signal Lab',journal:'Trade Journal',addtrade:'Record a Trade',plan:'60-Day Trading Plan',analytics:'Trading Analytics',settings:'Settings & Backup'};$('pageTitle').textContent=names[id]||'Trading Terminal';if(id==='addtrade'&&!$('tradeDate').value)$('tradeDate').value=new Date().toISOString().slice(0,10);if(id==='livecharts'){initMarketChart();loadMarketCandles()}if(id==='strategyai'){renderStrategyAI()}window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 function sums(){const net=trades.reduce((s,t)=>s+Number(t.pl||0),0),wins=trades.filter(t=>t.result==='WIN').length,losses=trades.filter(t=>t.result==='LOSS').length,grossWin=trades.reduce((s,t)=>s+Math.max(0,Number(t.pl)||0),0),grossLoss=trades.reduce((s,t)=>s+Math.max(0,-(Number(t.pl)||0)),0);return{net,wins,losses,grossWin,grossLoss,winrate:trades.length?wins/trades.length*100:0}}
 function chart(id){const svg=$(id),w=640,h=210,p=18,vals=[0,...trades.slice().reverse().reduce((a,t)=>{a.push((a[a.length-1]||0)+Number(t.pl||0));return a},[])];svg.innerHTML='';if(trades.length===0){svg.innerHTML='<text x="320" y="104" fill="#7486a0" font-size="13" text-anchor="middle">Your equity curve will appear after you add trades</text>';return}const min=Math.min(...vals,0),max=Math.max(...vals,0),range=max-min||1;const x=i=>p+i*(w-2*p)/(vals.length-1||1),y=v=>h-p-(v-min)*(h-2*p)/range;let ns='http://www.w3.org/2000/svg';for(let i=0;i<4;i++){let yy=p+i*(h-2*p)/3,l=document.createElementNS(ns,'line');l.setAttribute('x1',p);l.setAttribute('x2',w-p);l.setAttribute('y1',yy);l.setAttribute('y2',yy);l.setAttribute('stroke','#263449');l.setAttribute('stroke-dasharray','4 5');svg.appendChild(l)}let d=vals.map((v,i)=>(i?'L':'M')+x(i)+','+y(v)).join(' ');let path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill','none');path.setAttribute('stroke',vals[vals.length-1]>=0?'#39d6a0':'#ff7185');path.setAttribute('stroke-width','3');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');svg.appendChild(path);let c=document.createElementNS(ns,'circle');c.setAttribute('cx',x(vals.length-1));c.setAttribute('cy',y(vals[vals.length-1]));c.setAttribute('r','5');c.setAttribute('fill',vals[vals.length-1]>=0?'#39d6a0':'#ff7185');svg.appendChild(c)}
@@ -132,7 +147,7 @@ function exportCSV(){const rows=[['date','asset','direction','amount_usd','outco
 function clearTrades(){if(confirm('This permanently removes all trades saved in this browser. Export a backup first. Continue?')){trades=[];persist();render()}}
 $('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text()),incoming=Array.isArray(data)?data:data.trades;if(!Array.isArray(incoming)||!incoming.every(t=>t&&t.date&&t.asset&&Number.isFinite(Number(t.pl))))throw new Error('Invalid trade data');if(confirm('Replace current journal with '+incoming.length+' imported entries? Export your current data first if needed.')){trades=incoming.map(t=>({...t,id:String(t.id||Date.now()+Math.random()),pl:Number(t.pl),amount:Number(t.amount)||0}));persist();render();alert('Journal imported.')}}catch(err){alert('Could not import this file. Please select a valid MAHAD JSON backup.')}e.target.value=''});
 function buildDays(){const g=$('dayGrid');g.innerHTML=Array.from({length:60},(_,i)=>'<div class="day" title="Working-day slot '+(i+1)+'">D'+String(i+1).padStart(2,'0')+'</div>').join('')}
-let marketChart=null,marketSeries=null,marketResizeObserver=null,marketTimer=null,marketLoading=false,marketLastPair='';
+let marketChart=null,marketSeries=null,marketResizeObserver=null,marketTimer=null,marketLoading=false,marketLastPair='',marketCandles=[];
 const marketIntervalLabel={'1m':'M1','5m':'M5','15m':'M15','30m':'M30','1h':'H1','4h':'H4','1d':'D1'};
 function setMarketStatus(msg,state=''){ $('marketStatus').textContent=msg;$('marketDot').className='marketdot'+(state?' '+state:''); }
 function initMarketChart(){
@@ -153,12 +168,32 @@ async function loadMarketCandles(){
   const data=await response.json();if(!Array.isArray(data.bars))throw new Error(data.message||'Provider returned no OHLC bars for this symbol/timeframe.');
   const candles=data.bars.map(v=>({time:Math.floor(Date.parse(v.openTime)/1000),open:Number(v.open),high:Number(v.high),low:Number(v.low),close:Number(v.close)})).filter(v=>Number.isFinite(v.time)&&[v.open,v.high,v.low,v.close].every(Number.isFinite)).sort((a,b)=>a.time-b.time);
   if(!candles.length)throw new Error('No valid OHLC candles were returned for '+symbol+'.');
-  marketSeries.setData(candles);if(marketLastPair!==pair||!marketChart.timeScale().getVisibleLogicalRange())marketChart.timeScale().fitContent();marketLastPair=pair;
+  marketCandles=candles;marketSeries.setData(candles);if(marketLastPair!==pair||!marketChart.timeScale().getVisibleLogicalRange())marketChart.timeScale().fitContent();marketLastPair=pair;renderStrategyAI();
   const last=candles[candles.length-1];$('marketPrice').textContent=last.close.toFixed(pair.includes('JPY')?3:pair.includes('XAU')?2:5);$('marketCandleTime').textContent=new Date(last.time*1000).toISOString().replace('T',' ').slice(0,16);
   const openBar=data.bars.find(v=>v.isOpen);$('marketChartSubtitle').textContent=candles.length+' OHLC candles · source: '+(data.source||'biquote market feed')+' · updated '+new Date().toLocaleTimeString()+(openBar?' · current candle may still be forming':'');
   setMarketStatus('Connected · '+candles.length+' candles','ok');
  }catch(err){setMarketStatus('Data load failed','err');$('marketChartSubtitle').textContent=String(err.message||err)+' Check provider availability and symbol support; no sample prices are substituted.'}
  finally{marketLoading=false;$('refreshMarket').disabled=false}
+}
+function ema(values,period){if(values.length<period)return null;const k=2/(period+1);let v=values.slice(0,period).reduce((a,b)=>a+b,0)/period;for(let i=period;i<values.length;i++)v=values[i]*k+v*(1-k);return v}
+function rsi(values,period=14){if(values.length<=period)return null;let gain=0,loss=0;for(let i=1;i<=period;i++){const d=values[i]-values[i-1];gain+=Math.max(d,0);loss+=Math.max(-d,0)}gain/=period;loss/=period;for(let i=period+1;i<values.length;i++){const d=values[i]-values[i-1];gain=(gain*(period-1)+Math.max(d,0))/period;loss=(loss*(period-1)+Math.max(-d,0))/period}if(loss===0)return 100;return 100-100/(1+gain/loss)}
+function atr(bars,period=14){if(bars.length<=period)return null;const tr=[];for(let i=1;i<bars.length;i++){const b=bars[i],prev=bars[i-1];tr.push(Math.max(b.high-b.low,Math.abs(b.high-prev.close),Math.abs(b.low-prev.close)))}return tr.slice(-period).reduce((a,b)=>a+b,0)/period}
+function renderStrategyAI(){
+ const direction=$('aiDirection');if(!direction)return;
+ const closed=marketCandles.filter((b,i)=>!b.isOpen);const closes=closed.map(b=>b.close);
+ $('aiCandleCount').textContent=closed.length;
+ const noTrade=(why)=>{direction.textContent='NO TRADE';direction.className='metric gold';$('aiConfidence').textContent='No actionable setup';$('aiSignalTag').textContent='NO TRADE';$('aiTrend').textContent='—';$('aiRsi').textContent='—';$('aiEntry').textContent='—';$('aiStop').textContent='—';$('aiTarget').textContent='—';$('aiReason').innerHTML='<div class="minirow"><span>'+esc(why)+'</span></div>';};
+ if(closed.length<30){noTrade('Need at least 30 closed candles. Open Live Forex Charts and wait for data to load.');return}
+ const fast=ema(closes,9),slow=ema(closes,21),mom=rsi(closes,14),vol=atr(closed,14),last=closed[closed.length-1],prev=closed[closed.length-2];
+ $('aiTrend').textContent=fast>slow?'Bullish':fast<slow?'Bearish':'Flat';$('aiTrend').className='metric '+(fast>slow?'positive':fast<slow?'negative':'');
+ $('aiRsi').textContent=mom.toFixed(1);
+ const bullish=fast>slow&&mom>=52&&mom<=68&&last.close>last.open&&last.close>prev.close;
+ const bearish=fast<slow&&mom>=32&&mom<=48&&last.close<last.open&&last.close<prev.close;
+ if(!Number.isFinite(vol)||vol<=0){noTrade('ATR could not be calculated safely from this data.');return}
+ if(!bullish&&!bearish){noTrade('Trend, RSI band and closed-candle confirmation do not all agree. Wait for a clearer setup.');$('aiTrend').textContent=fast>slow?'Bullish':fast<slow?'Bearish':'Flat';$('aiRsi').textContent=mom.toFixed(1);$('aiCandleCount').textContent=closed.length;return}
+ const side=bullish?'BUY':'SELL',entry=last.close,stop=bullish?entry-1.5*vol:entry+1.5*vol,target=bullish?entry+3*vol:entry-3*vol,digits=$('marketPair').value.includes('JPY')?3:$('marketPair').value.includes('XAU')?2:5;
+ direction.textContent=side;direction.className='metric '+(bullish?'positive':'negative');$('aiConfidence').textContent='Rule match · paper signal only';$('aiSignalTag').textContent=side;$('aiEntry').textContent=entry.toFixed(digits);$('aiStop').textContent=stop.toFixed(digits);$('aiTarget').textContent=target.toFixed(digits);
+ $('aiReason').innerHTML='<div class="minirow"><span>EMA 9 / EMA 21 trend</span><strong>'+(bullish?'Bullish':'Bearish')+'</strong></div><div class="minirow"><span>RSI(14) momentum filter</span><strong>'+mom.toFixed(1)+'</strong></div><div class="minirow"><span>Last closed candle confirmation</span><strong>'+(bullish?'Bullish close':'Bearish close')+'</strong></div><div class="minirow"><span>Risk model</span><strong>ATR stop · 2R target</strong></div><div class="minirow"><span>Signal candle (UTC)</span><strong>'+new Date(last.time*1000).toISOString().replace('T',' ').slice(0,16)+'</strong></div>';
 }
 $('marketPair').addEventListener('change',loadMarketCandles);$('marketInterval').addEventListener('change',loadMarketCandles);$('refreshMarket').addEventListener('click',loadMarketCandles);
 if(marketTimer)clearInterval(marketTimer);marketTimer=setInterval(()=>{if($('livecharts').classList.contains('active'))loadMarketCandles()},30000);
